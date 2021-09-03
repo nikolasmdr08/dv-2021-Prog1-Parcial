@@ -13,19 +13,15 @@ public class MisilControler : MonoBehaviour
     private void Awake()
     {
         Invoke("Destroy", 3f);
+        enemiesInRange = RangoMisilControler.enemiesInRange;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        enemiesInRange = RangoMisilControler.enemiesInRange;
-
-        if(enemiesInRange.Count == 0)
-        {
-            target = null;
-        }
-        else
+        
+        if(enemiesInRange.Count != 0)
         {
             target = buscarCercano();
             Vector2 direccion = target.position - transform.position;
@@ -51,10 +47,12 @@ public class MisilControler : MonoBehaviour
         Transform enemyTarget = null;
         foreach (Transform enemy in enemiesInRange)
         {
-            if (Vector2.Distance(enemy.position, Player.transform.position) < maxDistance)
+            Vector2 vectorDireccion = enemy.position - transform.position;
+            if (vectorDireccion.magnitude < maxDistance)
             {
-                maxDistance = Vector2.Distance(enemy.position, Player.transform.position);
+                maxDistance = vectorDireccion.magnitude;
                 enemyTarget = enemy;
+                print(enemyTarget+ " " + maxDistance);
             }
         }
 
